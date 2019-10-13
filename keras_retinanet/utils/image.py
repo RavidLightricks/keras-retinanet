@@ -23,7 +23,7 @@ from .transform import change_transform_origin
 
 
 def read_image_bgr(path):
-    """ Read an image in BGR format.
+    """ Read an image in RGB format.
 
     Args
         path: Path to the image.
@@ -41,7 +41,7 @@ def preprocess_image(x, mode='caffe'):
         mode: One of "caffe" or "tf".
             - caffe: will zero-center each color channel with
                 respect to the ImageNet dataset, without scaling.
-            - tf: will scale pixels between -1 and 1, sample-wise.
+            - tf: will scale pixels between -1 and 1, sample-wise. Convert to RGB format.
 
     Returns
         The input with the ImageNet mean subtracted.
@@ -53,6 +53,7 @@ def preprocess_image(x, mode='caffe'):
     x = x.astype(np.float32)
 
     if mode == 'tf':
+        x = x[..., ::-1]
         x /= 127.5
         x -= 1.
     elif mode == 'caffe':
